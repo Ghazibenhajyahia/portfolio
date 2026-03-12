@@ -79,7 +79,7 @@
             <p class="enigma-q">I speak in functions, breathe in loops, and build things no one can touch but everyone uses. What am I?</p>
             <div class="enigma-input-row">
               <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="developer" data-idx="0" />
-              <button class="enigma-btn" onclick="checkAnswer(0)">DECRYPT</button>
+              <button class="enigma-btn" data-check="0">DECRYPT</button>
             </div>
             <p class="enigma-hint" id="hint-0"></p>
           </div>
@@ -91,7 +91,7 @@
             <p class="enigma-q">I orbit the black hole closest. Click me and you can reach my creator. Which planet am I?</p>
             <div class="enigma-input-row">
               <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="contact" data-idx="1" />
-              <button class="enigma-btn" onclick="checkAnswer(1)">DECRYPT</button>
+              <button class="enigma-btn" data-check="1">DECRYPT</button>
             </div>
             <p class="enigma-hint" id="hint-1"></p>
           </div>
@@ -103,7 +103,7 @@
             <p class="enigma-q">Three of my projects share the same engine. WordPress. Name any one of them (domain only).</p>
             <div class="enigma-input-row">
               <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="lagora|envirofest|conciergetunisie" data-idx="2" />
-              <button class="enigma-btn" onclick="checkAnswer(2)">DECRYPT</button>
+              <button class="enigma-btn" data-check="2">DECRYPT</button>
             </div>
             <p class="enigma-hint" id="hint-2"></p>
           </div>
@@ -116,7 +116,7 @@
             <p class="enigma-sub">(A=01, B=02 ... Z=26. The word describes what I do with code.)</p>
             <div class="enigma-input-row">
               <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="ghazi|build" data-idx="3" />
-              <button class="enigma-btn" onclick="checkAnswer(3)">DECRYPT</button>
+              <button class="enigma-btn" data-check="3">DECRYPT</button>
             </div>
             <p class="enigma-hint" id="hint-3"></p>
           </div>
@@ -128,7 +128,7 @@
             <p class="enigma-q">My designation is GBH-Ω-7749-ARCHITECT. What country am I operating from?</p>
             <div class="enigma-input-row">
               <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="tunisia" data-idx="4" />
-              <button class="enigma-btn" onclick="checkAnswer(4)">DECRYPT</button>
+              <button class="enigma-btn" data-check="4">DECRYPT</button>
             </div>
             <p class="enigma-hint" id="hint-4"></p>
           </div>
@@ -152,6 +152,6 @@
     </div>
   </div>
 
-  <script src="/src/enigma.js"></script>
+  <script type="module" src="/src/enigma.js"></script>
 </body>
 </html>
