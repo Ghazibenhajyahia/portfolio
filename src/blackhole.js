@@ -88,8 +88,13 @@ const PLANETS = [
   {
     name: 'CONTACT',     color: 0xff3366, r: 0.42, orbitR: 8.5,  phase: 0,              yOff: 0.3,
     info: { title: '[FILE_04 — ESTABLISH CONTACT]',
-      html: `<ul><li><a href="mailto:gbhy1919@gmail.com">gbhy1919@gmail.com</a></li>
-      <li><a href="https://github.com/Ghazibenhajyahia" target="_blank">github.com/Ghazibenhajyahia</a></li></ul>
+      html: `<ul>
+      <li><a href="mailto:gbhy1919@gmail.com">✉ gbhy1919@gmail.com</a></li>
+      <li><a href="https://github.com/Ghazibenhajyahia" target="_blank">⌥ github.com/Ghazibenhajyahia</a></li>
+      <li><a href="https://www.linkedin.com/in/ghazi-ben-hadj-yahia/" target="_blank">◈ LinkedIn</a></li>
+      <li><a href="https://www.instagram.com/ghazi_bhy" target="_blank">◉ Instagram @ghazi_bhy</a></li>
+      <li><a href="https://www.facebook.com/ghazi.benhadjyahia" target="_blank">◆ Facebook</a></li>
+      </ul>
       <br><p style="opacity:.5;font-size:.72rem">Available for freelance, collabs, interesting problems.</p>` }
   },
   {
