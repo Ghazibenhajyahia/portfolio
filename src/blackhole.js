@@ -104,7 +104,7 @@ const PLANETS = [
       <li><a href="https://lagora.tn" target="_blank">lagora.tn</a> — WordPress marketplace</li>
       <li><a href="https://thelandlord.tn" target="_blank">thelandlord.tn</a> — Flutter + Node.js app</li>
       <li><a href="https://manager.thelandlord.tn" target="_blank">manager.thelandlord.tn</a> — PMS (Laravel)</li>
-      <li><a href="https://secadenorddigitale.tn/ScadaSidiElBarrak" target="_blank">Secadenordigital SCADA</a> — Industrial ERP (Laravel)</li>
+      <li><a href="https://secadenorddigitale.tn/ScadaSidiElBarrak/login" target="_blank">Secadenordigital SCADA</a> — Industrial ERP (Laravel)</li>
       <li><a href="https://envirofest.tn" target="_blank">envirofest.tn</a> — Festival platform</li>
       <li><a href="https://conciergetunisie.thelandlord.tn" target="_blank">conciergetunisie</a> — Concierge</li></ul>` }
   },
