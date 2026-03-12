@@ -11,6 +11,8 @@ export default {
         main:      resolve(__dirname, 'index.html'),
         blackhole: resolve(__dirname, 'blackhole.html'),
         enigma:    resolve(__dirname, 'enigma.html'),
+        farm:      resolve(__dirname, 'farm.html'),
+        credits:   resolve(__dirname, 'credits.html'),
       }
     }
   }
