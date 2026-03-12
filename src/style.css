@@ -385,3 +385,51 @@ p {
     gap: 0.2rem;
   }
 }
+
+/* ── Mute Button ── */
+#mute-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 50;
+  background: rgba(0, 3, 8, 0.7);
+  border: 1px solid var(--border-green);
+  color: var(--green);
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mute-btn:hover {
+  background: var(--dim-green);
+  box-shadow: 0 0 12px #00ff8830;
+}
+
+/* ── Black Hole Overlay ── */
+#blackhole-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #000000 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0);
+  transition: none;
+}
+
+#blackhole-overlay.active {
+  pointer-events: all;
+  animation: bhExpand 2s ease-in forwards;
+}
+
+@keyframes bhExpand {
+  0%   { opacity: 0; transform: scale(0); }
+  30%  { opacity: 0.6; transform: scale(0.3); }
+  100% { opacity: 1; transform: scale(8); }
+}
