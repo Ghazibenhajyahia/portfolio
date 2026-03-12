@@ -207,14 +207,37 @@ function getHitPlanet(e) {
 }
 
 window.addEventListener('mousemove', e => {
-  document.body.style.cursor = getHitPlanet(e) ? 'pointer' : '';
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const onBH = raycaster.intersectObject(bhCore).length > 0;
+  document.body.style.cursor = (onBH || getHitPlanet(e)) ? 'pointer' : '';
 });
 
 window.addEventListener('click', e => {
   if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
+
+  // Click black hole core → enter enigma page
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  if (raycaster.intersectObject(bhCore).length > 0) {
+    enterBlackHole(); return;
+  }
+
   const pd = getHitPlanet(e);
   if (pd) showPlanetModal(pd);
 });
+
+function enterBlackHole() {
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:999;opacity:0;transition:opacity 0.7s ease;pointer-events:none';
+  document.body.appendChild(flash);
+  requestAnimationFrame(() => {
+    flash.style.opacity = '1';
+    setTimeout(() => { window.location.href = 'enigma.html'; }, 800);
+  });
+}
 
 // ── Modal ─────────────────────────────────────────────────
 function showPlanetModal(pd) {
