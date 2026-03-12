@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>// SECTOR Ψ — BIOFARM //</title>
+  <link rel="stylesheet" href="/src/farm.css"/>
+</head>
+<body>
+
+  <div class="geo-bg" id="geo-bg"></div>
+
+  <header>
+    <span class="hdr-label">⚗ SECTOR Ψ — GHAZI'S BIOFARM — CLASSIFIED CULTIVATION ⚗</span>
+    <a href="blackhole.html" class="back-link">← EVACUATE</a>
+  </header>
+
+  <div class="hud">
+    <div class="res-slot"><span class="res-icon">🧬</span><span class="res-label">BIO-MASS</span><span class="res-val" id="r-bio">0</span></div>
+    <div class="res-slot"><span class="res-icon">🍄</span><span class="res-label">SPORE-DATA</span><span class="res-val" id="r-spore">0</span></div>
+    <div class="res-slot"><span class="res-icon">💎</span><span class="res-label">CRYSTAL-CODE</span><span class="res-val" id="r-crystal">0</span></div>
+    <div class="res-divider"></div>
+    <div id="cauldron-hint" class="cauldron-hint">Harvest to unlock the Cauldron</div>
+  </div>
+
+  <main class="farm-grid">
+
+    <!-- ANIMALS -->
+    <div class="entity" id="e0" data-type="animal" data-hp="4" data-max="4" data-res="bio" data-idx="0">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="beast">
+            <div class="beast-body"></div>
+            <div class="beast-leg l1"></div><div class="beast-leg l2"></div>
+            <div class="beast-leg r1"></div><div class="beast-leg r2"></div>
+            <div class="beast-eye l"></div><div class="beast-eye r"></div>
+            <div class="beast-glow"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">LARAVEL BEAST</div>
+          <div class="entity-desc">Load-bearing creature. Routes every request with elegance. Ghazi's backbone.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag bio">BIO-MASS</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-0"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="0">HARVEST</button>
+    </div>
+
+    <div class="entity" id="e1" data-type="animal" data-hp="4" data-max="4" data-res="bio" data-idx="1">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="slug">
+            <div class="slug-body"></div>
+            <div class="slug-eye l"></div><div class="slug-eye r"></div>
+            <div class="slug-trail"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">NODE SLUG</div>
+          <div class="entity-desc">Asynchronous by nature. Non-blocking. Processes events in parallel. Never sleeps.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag bio">BIO-MASS</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-1"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="1">HARVEST</button>
+    </div>
+
+    <!-- PLANTS -->
+    <div class="entity" id="e2" data-type="plant" data-hp="5" data-max="5" data-res="spore" data-idx="2">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="vine">
+            <div class="vine-stem"></div>
+            <div class="vine-leaf l"></div><div class="vine-leaf r"></div>
+            <div class="vine-bud"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">WORDPRESS VINE</div>
+          <div class="entity-desc">Ancient organism. Endlessly adaptable. Powers half the web. Ghazi bends it to his will.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag spore">SPORE-DATA</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-2"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="2">CHOP</button>
+    </div>
+
+    <div class="entity" id="e3" data-type="plant" data-hp="5" data-max="5" data-res="spore" data-idx="3">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="flutter-bloom">
+            <div class="bloom-center"></div>
+            <div class="bloom-petal p1"></div><div class="bloom-petal p2"></div>
+            <div class="bloom-petal p3"></div><div class="bloom-petal p4"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">FLUTTER BLOOM</div>
+          <div class="entity-desc">Cross-platform lifeform. Identical DNA, blooms on any soil. One codebase, infinite surfaces.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag spore">SPORE-DATA</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-3"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="3">CHOP</button>
+    </div>
+
+    <!-- MINERALS -->
+    <div class="entity" id="e4" data-type="crystal" data-hp="3" data-max="3" data-res="crystal" data-idx="4">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="crystal-entity">
+            <div class="cr-face f1"></div><div class="cr-face f2"></div>
+            <div class="cr-face f3"></div><div class="cr-shine"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">FIGMA CRYSTAL</div>
+          <div class="entity-desc">Geometric intelligence. Communicates through form and colour. Ghazi's design language made flesh.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag crystal">CRYSTAL-CODE</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-4"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="4">MINE</button>
+    </div>
+
+    <div class="entity" id="e5" data-type="crystal" data-hp="3" data-max="3" data-res="crystal" data-idx="5">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="db-stone">
+            <div class="db-body"></div>
+            <div class="db-ring r1"></div><div class="db-ring r2"></div>
+            <div class="db-glow"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">POSTGRES STONE</div>
+          <div class="entity-desc">Ancient crystallised data. Ask it anything. Answers in microseconds. Ghazi's memory organ.</div>
+          <div class="entity-drop">Drops: <span class="drop-tag crystal">CRYSTAL-CODE</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="hp-5"></div></div>
+        </div>
+      </div>
+      <button class="harvest-btn" data-idx="5">MINE</button>
+    </div>
+
+    <!-- CAULDRON -->
+    <div class="entity cauldron-card" id="cauldron" style="opacity:.4;pointer-events:none">
+      <div class="entity-inner">
+        <div class="entity-art">
+          <div class="cauldron">
+            <div class="cauldron-body">
+              <div class="cauldron-liquid" id="cauldron-liquid"></div>
+            </div>
+            <div class="cauldron-leg l"></div><div class="cauldron-leg r"></div>
+            <div class="cauldron-steam s1"></div>
+            <div class="cauldron-steam s2"></div>
+            <div class="cauldron-steam s3"></div>
+          </div>
+        </div>
+        <div class="entity-info">
+          <div class="entity-name">⚗ CAULDRON</div>
+          <div class="entity-desc">Recipe: 4 BIO-MASS + 4 SPORE-DATA + 2 CRYSTAL-CODE<br>Synthesises: <strong>PERCEPTION MODULE</strong></div>
+          <div class="recipe" id="recipe-status">
+            <span id="rec-bio" class="rec-item">🧬 0/4</span>
+            <span id="rec-spore" class="rec-item">🍄 0/4</span>
+            <span id="rec-crystal" class="rec-item">💎 0/2</span>
+          </div>
+        </div>
+      </div>
+      <button class="harvest-btn cauldron-btn" id="cauldron-btn">MIX &amp; BREW</button>
+    </div>
+
+  </main>
+
+  <!-- Floating harvest numbers -->
+  <div id="floaters"></div>
+
+  <!-- Tab consume overlay -->
+  <div id="tab-overlay">
+    <div class="tab-card">
+      <div class="tab-stamp">⚠ PERCEPTION MODULE SYNTHESISED ⚠</div>
+      <div class="tab-art">
+        <div class="tab-pill">
+          <div class="tab-pulse"></div>
+          <span>GBH-Ω</span>
+        </div>
+      </div>
+      <p>A small tab encoded with Ghazi's entire stack.<br>Consume to see the full picture.</p>
+      <button id="consume-btn" class="harvest-btn" style="margin-top:1.5rem;font-size:1rem;padding:.8rem 2rem">CONSUME</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/farm.js"></script>
+</body>
+</html>
