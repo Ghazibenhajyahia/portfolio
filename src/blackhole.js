@@ -30,10 +30,11 @@ camera.lookAt(0, 0, 0);
 // ── Black Hole: dark sphere + glow shells ─────────────────
 const BH_R = 2.4;
 
-scene.add(new THREE.Mesh(
+const bhCore = new THREE.Mesh(
   new THREE.SphereGeometry(BH_R, 64, 64),
   new THREE.MeshBasicMaterial({ color: 0x000000 })
-));
+);
+scene.add(bhCore);
 
 // Inner orange glow (back-face, larger sphere)
 scene.add(new THREE.Mesh(
