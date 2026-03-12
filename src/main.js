@@ -8,18 +8,16 @@ gsap.registerPlugin(ScrollTrigger);
 // ── Audio ─────────────────────────────────────────────────
 const theme = new XFilesTheme();
 const muteBtn = document.getElementById('mute-btn');
-muteBtn.addEventListener('click', () => {
-  const muted = theme.toggle();
+
+muteBtn.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  const muted = await theme.toggle();
   muteBtn.textContent = muted ? '🔇' : '🔊';
   muteBtn.title = muted ? 'Unmute' : 'Mute';
 });
-// Auto-start on first user interaction
-let audioStarted = false;
-const startAudio = () => {
-  if (!audioStarted) { audioStarted = true; theme.init(); }
-};
-window.addEventListener('scroll', startAudio, { once: true });
-window.addEventListener('click', startAudio, { once: true });
+
+// Also try to start on first scroll (may be blocked until button click)
+window.addEventListener('scroll', () => { theme.init(); }, { once: true });
 
 // ── Renderer ──────────────────────────────────────────────
 const canvas = document.getElementById('bg');
