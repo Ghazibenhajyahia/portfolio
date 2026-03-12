@@ -3,7 +3,7 @@ const SPEECHES = [
   "Hmm... not quite. Think differently.",
   "Closer than you think. Try again.",
   "CORRECT. Another file unlocked.",
-  "Impressive. You're getting warmer.",
+  "Impressive. Keep going.",
   "All files decrypted. Identity confirmed.",
 ];
 
@@ -12,17 +12,17 @@ const total = 5;
 
 function checkAnswer(idx) {
   const input = document.querySelector(`.enigma-input[data-idx="${idx}"]`);
-  const btn = input.nextElementSibling;
-  const hint = document.getElementById(`hint-${idx}`);
-  const row = document.getElementById(`enigma-${idx}`);
-  const answer = input.dataset.answer;
-  const userVal = input.value.trim().toLowerCase();
+  const btn   = document.querySelector(`.enigma-btn[data-check="${idx}"]`);
+  const hint  = document.getElementById(`hint-${idx}`);
+  const row   = document.getElementById(`enigma-${idx}`);
 
+  if (!input || !btn || input.disabled) return;
+
+  const userVal  = input.value.trim().toLowerCase();
   if (!userVal) return;
 
-  // Support multiple correct answers (pipe-separated)
-  const accepted = answer.split('|');
-  const correct = accepted.some(a => userVal.includes(a.toLowerCase()));
+  const accepted = input.dataset.answer.split('|');
+  const correct  = accepted.some(a => userVal.includes(a.toLowerCase()));
 
   if (correct) {
     row.classList.add('solved');
@@ -33,13 +33,12 @@ function checkAnswer(idx) {
     btn.disabled = true;
     score++;
     document.getElementById('score-display').textContent = `${score} / ${total}`;
-    setSpeech(SPEECHES[3]);
+    setSpeech(SPEECHES[score === total ? 5 : 3]);
 
     if (score === total) {
       setTimeout(() => {
-        setSpeech(SPEECHES[5]);
         document.getElementById('win-screen').classList.add('visible');
-      }, 800);
+      }, 900);
     }
   } else {
     row.classList.add('wrong');
@@ -52,21 +51,23 @@ function checkAnswer(idx) {
 
 function setSpeech(text) {
   const el = document.getElementById('speech-text');
+  if (!el) return;
   el.textContent = '';
   let i = 0;
   const iv = setInterval(() => {
-    el.textContent += text[i];
-    i++;
+    el.textContent += text[i++];
     if (i >= text.length) clearInterval(iv);
   }, 22);
 }
 
-// Allow Enter key on inputs
-document.querySelectorAll('.enigma-input').forEach(input => {
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkAnswer(parseInt(input.dataset.idx));
-  });
+// ── Event delegation (no inline onclick needed) ───────────
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.enigma-btn[data-check]');
+  if (btn) checkAnswer(parseInt(btn.dataset.check));
 });
 
-// Expose to HTML onclick
-window.checkAnswer = checkAnswer;
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const input = e.target.closest('.enigma-input[data-idx]');
+  if (input) checkAnswer(parseInt(input.dataset.idx));
+});
