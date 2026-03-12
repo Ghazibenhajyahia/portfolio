@@ -175,7 +175,8 @@ PLANETS.forEach(pd => {
 
 // ── Lights ────────────────────────────────────────────────
 scene.add(new THREE.AmbientLight(0x112244, 2.5));
-scene.add(Object.assign(new THREE.PointLight(0xff6600, 2.5, 35), { position: new THREE.Vector3(0, 0, 0) }));
+const bhLight = new THREE.PointLight(0xff6600, 2.5, 35);
+scene.add(bhLight);
 
 // ── HTML Labels ───────────────────────────────────────────
 const labels = PLANETS.map(pd => {
