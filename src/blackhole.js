@@ -5,122 +5,106 @@ const canvas = document.getElementById('bh-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x000005);
+renderer.setClearColor(0x000008);
 
-// ── Scene & Camera ────────────────────────────────────────
+// ── Scene ─────────────────────────────────────────────────
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000005, 0.012);
 
+// ── Camera: 3/4 top-down view so disk reads as ellipse ────
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 600);
-// View from slightly above the orbital plane for depth
-camera.position.set(0, 8, 22);
+camera.position.set(0, 16, 20);
 camera.lookAt(0, 0, 0);
 
-// ── Stars (background sphere) ─────────────────────────────
-const sGeo = new THREE.BufferGeometry();
-const sPts = new Float32Array(6000 * 3);
-for (let i = 0; i < 6000 * 3; i++) sPts[i] = (Math.random() - 0.5) * 400;
-sGeo.setAttribute('position', new THREE.BufferAttribute(sPts, 3));
-scene.add(new THREE.Points(sGeo,
-  new THREE.PointsMaterial({ color: 0xffffff, size: 0.055, transparent: true, opacity: 0.75 })
+// ── Stars (background) ────────────────────────────────────
+const starGeo = new THREE.BufferGeometry();
+const starPts = new Float32Array(7000 * 3);
+for (let i = 0; i < starPts.length; i++) starPts[i] = (Math.random() - 0.5) * 400;
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPts, 3));
+scene.add(new THREE.Points(starGeo,
+  new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.7 })
 ));
 
-// ── Orbital plane quaternion ───────────────────────────────
-// Accretion disk tilt — all orbits share this plane
-const DISK_TILT = Math.PI / 2.6;
-const orbitNormal = new THREE.Vector3(0, 1, 0)
-  .applyQuaternion(new THREE.Quaternion().setFromEuler(new THREE.Euler(DISK_TILT, 0, 0)));
-const orbitQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(DISK_TILT, 0, 0));
-
-// Helper: orbit position in disk plane
-function orbitPosition(angle, radius) {
-  const local = new THREE.Vector3(
-    Math.cos(angle) * radius,
-    0,
-    Math.sin(angle) * radius
-  );
-  local.applyQuaternion(orbitQuaternion);
-  return local;
-}
-
-// ── Black Hole Core ───────────────────────────────────────
-// Inner dark sphere
+// ── Black Hole (3D sphere with glow layers) ───────────────
+// Innermost: pure black
 const bhCore = new THREE.Mesh(
-  new THREE.SphereGeometry(2.0, 64, 64),
+  new THREE.SphereGeometry(2.2, 64, 64),
   new THREE.MeshBasicMaterial({ color: 0x000000 })
 );
 scene.add(bhCore);
 
-// Photon sphere glow (slightly larger, emissive orange edge)
-const photonSphere = new THREE.Mesh(
-  new THREE.SphereGeometry(2.35, 64, 64),
-  new THREE.MeshBasicMaterial({ color: 0xff5500, transparent: true, opacity: 0.12, side: THREE.BackSide })
+// Glow shell 1 — deep orange halo
+const glow1 = new THREE.Mesh(
+  new THREE.SphereGeometry(2.6, 64, 64),
+  new THREE.MeshBasicMaterial({ color: 0xff4400, transparent: true, opacity: 0.15, side: THREE.BackSide })
 );
-scene.add(photonSphere);
+scene.add(glow1);
 
-// ── Accretion Disk ────────────────────────────────────────
-const diskGroup = new THREE.Group();
-diskGroup.rotation.x = DISK_TILT;
-scene.add(diskGroup);
-
-// Main disk — thick inner ring
-const diskInner = new THREE.Mesh(
-  new THREE.TorusGeometry(3.0, 0.8, 6, 160),
-  new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.75 })
+// Glow shell 2 — wider faint halo
+const glow2 = new THREE.Mesh(
+  new THREE.SphereGeometry(3.4, 64, 64),
+  new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.06, side: THREE.BackSide })
 );
-diskGroup.add(diskInner);
+scene.add(glow2);
 
-// Mid ring
-const diskMid = new THREE.Mesh(
-  new THREE.TorusGeometry(4.2, 0.45, 4, 160),
-  new THREE.MeshBasicMaterial({ color: 0xff4400, transparent: true, opacity: 0.45 })
-);
-diskGroup.add(diskMid);
+// ── Accretion Disk (particle ring, flat in XZ plane) ──────
+const DISK_BANDS = [
+  { rMin: 2.5, rMax: 3.4, count: 800,  color: 0xffaa00, size: 0.065, opacity: 1.0 },
+  { rMin: 3.4, rMax: 4.5, count: 700,  color: 0xff6600, size: 0.055, opacity: 0.8 },
+  { rMin: 4.5, rMax: 6.0, count: 500,  color: 0xff3300, size: 0.045, opacity: 0.6 },
+  { rMin: 6.0, rMax: 8.5, count: 300,  color: 0xdd2200, size: 0.035, opacity: 0.35 },
+];
 
-// Outer ring
-const diskOuter = new THREE.Mesh(
-  new THREE.TorusGeometry(5.4, 0.2, 4, 160),
-  new THREE.MeshBasicMaterial({ color: 0xff2200, transparent: true, opacity: 0.25 })
-);
-diskGroup.add(diskOuter);
-
-// ── Accretion Particles (in orbital plane) ────────────────
-const partCount = 2000;
-const partGeo = new THREE.BufferGeometry();
-const partPos = new Float32Array(partCount * 3);
-const partAngles = new Float32Array(partCount);
-const partRadii = new Float32Array(partCount);
-const partSpeeds = new Float32Array(partCount);
-
-for (let i = 0; i < partCount; i++) {
-  partAngles[i] = Math.random() * Math.PI * 2;
-  partRadii[i] = 2.4 + Math.random() * 4.5; // 2.4 → 6.9
-  // Kepler speed: ω ∝ 1/r^1.5
-  partSpeeds[i] = 0.012 / Math.pow(partRadii[i] * 0.25, 1.5);
-  const p = orbitPosition(partAngles[i], partRadii[i]);
-  partPos[i * 3] = p.x;
-  partPos[i * 3 + 1] = p.y + (Math.random() - 0.5) * 0.3;
-  partPos[i * 3 + 2] = p.z;
-}
-partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
-const partMesh = new THREE.Points(partGeo, new THREE.PointsMaterial({
-  color: 0xff8800, size: 0.055, transparent: true, opacity: 0.85
-}));
-scene.add(partMesh);
+const diskParticles = DISK_BANDS.map(band => {
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(band.count * 3);
+  const angles = new Float32Array(band.count);
+  const radii = new Float32Array(band.count);
+  const speeds = new Float32Array(band.count);
+  for (let i = 0; i < band.count; i++) {
+    angles[i] = Math.random() * Math.PI * 2;
+    radii[i] = band.rMin + Math.random() * (band.rMax - band.rMin);
+    speeds[i] = 0.018 / Math.sqrt(radii[i]); // Kepler
+    pos[i * 3]     = Math.cos(angles[i]) * radii[i];
+    pos[i * 3 + 1] = (Math.random() - 0.5) * 0.18; // thin disk
+    pos[i * 3 + 2] = Math.sin(angles[i]) * radii[i];
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pts = new THREE.Points(geo, new THREE.PointsMaterial({
+    color: band.color, size: band.size, transparent: true, opacity: band.opacity
+  }));
+  scene.add(pts);
+  return { pts, geo, angles, radii, speeds, count: band.count };
+});
 
 // ── Planets ───────────────────────────────────────────────
-// Kepler: angular speed ∝ 1 / sqrt(r)  (normalized so inner ~0.30 rad/s)
-const BASE_SPEED = 1.0;
-function keplerSpeed(r) { return BASE_SPEED / Math.sqrt(r); }
+// Speed: Kepler normalized — closer = faster
+function kSpeed(r) { return 0.38 / Math.sqrt(r); }
 
 const PLANETS = [
   {
-    name: 'PROJECTS',
-    color: 0x2266ff,
-    emissive: 0x001133,
-    radius: 0.70,   // large — most work
-    orbitR: 7.5,
+    name: 'CONTACT',
+    color: 0xff3366,
+    emissive: 0x330011,
+    radius: 0.42,
+    orbitR: 7.0,
     phase: 0,
+    yOffset: 0.4,
+    info: {
+      title: '[FILE_04 — ESTABLISH CONTACT]',
+      html: `<ul>
+        <li><a href="mailto:gbhy1919@gmail.com">gbhy1919@gmail.com</a></li>
+        <li><a href="https://github.com/Ghazibenhajyahia" target="_blank">github.com/Ghazibenhajyahia</a></li>
+      </ul><br><p style="opacity:.5;font-size:.72rem">Available for freelance, collabs, and interesting problems.</p>`
+    }
+  },
+  {
+    name: 'PROJECTS',
+    color: 0x4499ff,
+    emissive: 0x001133,
+    radius: 0.68,
+    orbitR: 9.5,
+    phase: Math.PI * 0.4,
+    yOffset: -0.5,
     info: {
       title: '[FILE_02 — OPERATIONS]',
       html: `<ul>
@@ -128,18 +112,19 @@ const PLANETS = [
         <li><a href="https://thelandlord.tn" target="_blank">thelandlord.tn</a> — Flutter + Node.js mobile app</li>
         <li><a href="https://manager.thelandlord.tn" target="_blank">manager.thelandlord.tn</a> — PMS (Laravel)</li>
         <li>Secadenordigital SCADA — Industrial ERP (Laravel)</li>
-        <li><a href="https://envirofest.tn" target="_blank">envirofest.tn</a> — Festival platform (WordPress)</li>
-        <li><a href="https://conciergetunisie.thelandlord.tn" target="_blank">conciergetunisie</a> — Concierge service (WordPress)</li>
+        <li><a href="https://envirofest.tn" target="_blank">envirofest.tn</a> — Environmental festival</li>
+        <li><a href="https://conciergetunisie.thelandlord.tn" target="_blank">conciergetunisie</a> — Concierge platform</li>
       </ul>`
     }
   },
   {
     name: 'SKILLS',
-    color: 0x00cc66,
-    emissive: 0x003311,
-    radius: 0.55,
-    orbitR: 9.5,
-    phase: (Math.PI * 2) / 5,
+    color: 0x00dd66,
+    emissive: 0x002211,
+    radius: 0.52,
+    orbitR: 12.0,
+    phase: Math.PI * 0.8,
+    yOffset: 0.6,
     info: {
       title: '[FILE_03 — CAPABILITIES]',
       html: `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem">
@@ -152,9 +137,10 @@ const PLANETS = [
     name: 'ABOUT',
     color: 0xffcc00,
     emissive: 0x221100,
-    radius: 0.60,
-    orbitR: 11.5,
-    phase: (Math.PI * 2 * 2) / 5,
+    radius: 0.58,
+    orbitR: 14.5,
+    phase: Math.PI * 1.2,
+    yOffset: -0.3,
     info: {
       title: '[FILE_01 — IDENTITY]',
       html: `<p>Full-stack developer specializing in web and mobile. Fluent in Laravel, Flutter, Node.js, and WordPress. Designs his own work. Freelances in cultural events when the stars align.</p>
@@ -162,28 +148,13 @@ const PLANETS = [
     }
   },
   {
-    name: 'CONTACT',
-    color: 0xff3366,
-    emissive: 0x220011,
-    radius: 0.42,
-    orbitR: 6.0,
-    phase: (Math.PI * 2 * 3) / 5,
-    info: {
-      title: '[FILE_04 — ESTABLISH CONTACT]',
-      html: `<ul>
-        <li><a href="mailto:gbhy1919@gmail.com">gbhy1919@gmail.com</a></li>
-        <li><a href="https://github.com/Ghazibenhajyahia" target="_blank">github.com/Ghazibenhajyahia</a></li>
-      </ul>
-      <br><p style="opacity:.5;font-size:.72rem">Available for freelance, collabs, and interesting problems.</p>`
-    }
-  },
-  {
     name: '???',
-    color: 0x9900ff,
+    color: 0xaa00ff,
     emissive: 0x110033,
-    radius: 0.32,
-    orbitR: 13.5,
-    phase: (Math.PI * 2 * 4) / 5,
+    radius: 0.30,
+    orbitR: 17.0,
+    phase: Math.PI * 1.7,
+    yOffset: 0.8,
     info: {
       title: '⚠ SIGNAL ENCRYPTED ⚠',
       html: `<p>You weren't supposed to find this.</p>
@@ -191,46 +162,55 @@ const PLANETS = [
       ENTITY: GBH-Ω-7749-ARCHITECT<br>
       THREAT LEVEL: ■■■■■ CREATIVE<br>
       KNOWN ABILITIES: Full-stack engineering · Design · Cultural infiltration<br>
-      STATUS: ● ACTIVE — MONITORING
-      </p>
+      STATUS: ● ACTIVE — MONITORING</p>
       <br><p style="opacity:.4;font-size:.65rem">DOCUMENT #XF-2749 · EYES ONLY</p>`
     }
   }
 ];
 
-// Compute Kepler speeds
-PLANETS.forEach(p => {
-  p.orbitSpeed = keplerSpeed(p.orbitR) * 0.28;
-});
+PLANETS.forEach(p => { p.orbitSpeed = kSpeed(p.orbitR); });
 
 const planetMeshes = [];
-PLANETS.forEach((p) => {
+PLANETS.forEach(p => {
   const mesh = new THREE.Mesh(
     new THREE.SphereGeometry(p.radius, 48, 48),
     new THREE.MeshStandardMaterial({
       color: p.color,
       emissive: p.emissive,
-      metalness: 0.2,
-      roughness: 0.65,
+      metalness: 0.15,
+      roughness: 0.6,
     })
   );
   mesh.userData = p;
   scene.add(mesh);
   planetMeshes.push(mesh);
 
-  // Atmospheric glow around each planet
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(p.radius * 1.35, 32, 32),
-    new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.07, side: THREE.BackSide })
-  );
-  mesh.add(glow);
+  // Atmosphere glow
+  mesh.add(new THREE.Mesh(
+    new THREE.SphereGeometry(p.radius * 1.4, 32, 32),
+    new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.08, side: THREE.BackSide })
+  ));
 
-  // Point light
-  mesh.add(new THREE.PointLight(p.color, 0.6, 6));
+  // Planet glow light
+  mesh.add(new THREE.PointLight(p.color, 0.7, 7));
 });
 
+// Orbit trail rings (flat, faint)
+PLANETS.forEach(p => {
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(p.orbitR, 0.015, 3, 200),
+    new THREE.MeshBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.07 })
+  );
+  ring.rotation.x = Math.PI / 2;
+  scene.add(ring);
+});
+
+// ── Lighting ──────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x111133, 2.0));
+scene.add(Object.assign(new THREE.PointLight(0xff6600, 2.0, 25), { position: new THREE.Vector3(0, 0, 0) }));
+
 // ── HTML Labels ───────────────────────────────────────────
-const labels = PLANETS.map((p) => {
+const labels = PLANETS.map(p => {
   const el = document.createElement('div');
   el.className = 'planet-label';
   el.textContent = p.name;
@@ -238,44 +218,27 @@ const labels = PLANETS.map((p) => {
   return el;
 });
 
-// ── Orbit trail rings (subtle, in disk plane) ─────────────
-PLANETS.forEach((p) => {
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(p.orbitR, 0.012, 3, 180),
-    new THREE.MeshBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.06 })
-  );
-  ring.applyQuaternion(orbitQuaternion);
-  scene.add(ring);
-});
-
-// ── Lights ────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x111133, 1.5));
-const bhLight = new THREE.PointLight(0xff6600, 1.5, 30);
-bhLight.position.set(0, 0, 0);
-scene.add(bhLight);
-
 // ── Raycaster ─────────────────────────────────────────────
 const raycaster = new THREE.Raycaster();
-raycaster.params.Points = { threshold: 0.2 };
 const mouse = new THREE.Vector2();
 
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('mousemove', e => {
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
-  const hits = raycaster.intersectObjects(planetMeshes, true);
-  document.body.style.cursor = hits.length > 0 ? 'pointer' : '';
+  document.body.style.cursor = raycaster.intersectObjects(planetMeshes, true).length > 0 ? 'pointer' : '';
 });
 
-window.addEventListener('click', (e) => {
-  if (e.target.id === 'planet-modal' || e.target.closest('.planet-card')) return;
+window.addEventListener('click', e => {
+  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(planetMeshes, true);
   if (hits.length > 0) {
-    const mesh = hits[0].object.userData.name ? hits[0].object : hits[0].object.parent;
-    if (mesh.userData.info) showPlanetModal(mesh.userData);
+    let obj = hits[0].object;
+    while (obj && !obj.userData.info) obj = obj.parent;
+    if (obj?.userData.info) showPlanetModal(obj.userData);
   }
 });
 
@@ -286,10 +249,10 @@ function showPlanetModal(data) {
   document.getElementById('planet-modal').classList.add('visible');
 }
 window.closePlanetModal = () => document.getElementById('planet-modal').classList.remove('visible');
-document.addEventListener('click', (e) => { if (e.target.id === 'planet-modal') window.closePlanetModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.closePlanetModal(); });
+document.addEventListener('click', e => { if (e.target.id === 'planet-modal') window.closePlanetModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closePlanetModal(); });
 
-// ── Animation ─────────────────────────────────────────────
+// ── Animation loop ────────────────────────────────────────
 let time = 0;
 const tmpV = new THREE.Vector3();
 
@@ -297,46 +260,49 @@ function animate() {
   requestAnimationFrame(animate);
   time += 0.008;
 
-  // Orbit particles — Kepler speeds
-  const pPos = partGeo.attributes.position;
-  for (let i = 0; i < partCount; i++) {
-    partAngles[i] += partSpeeds[i];
-    const p = orbitPosition(partAngles[i], partRadii[i]);
-    pPos.setXYZ(i, p.x, p.y + Math.sin(time * 2 + i) * 0.08, p.z);
-  }
-  pPos.needsUpdate = true;
+  // Accretion disk particles — Kepler orbit
+  diskParticles.forEach(({ geo, angles, radii, speeds, count }) => {
+    const pos = geo.attributes.position;
+    for (let i = 0; i < count; i++) {
+      angles[i] += speeds[i];
+      pos.setXYZ(i,
+        Math.cos(angles[i]) * radii[i],
+        pos.getY(i),
+        Math.sin(angles[i]) * radii[i]
+      );
+    }
+    pos.needsUpdate = true;
+  });
 
-  // Orbit planets — all in same quaternion plane, Kepler speeds
+  // Planet orbits — flat XZ plane + yOffset for depth
   planetMeshes.forEach((mesh, i) => {
-    const pd = PLANETS[i];
-    const angle = time * pd.orbitSpeed + pd.phase;
-    const pos = orbitPosition(angle, pd.orbitR);
-    mesh.position.copy(pos);
-    mesh.rotation.y = time * 0.4;
+    const p = PLANETS[i];
+    const angle = time * p.orbitSpeed + p.phase;
+    mesh.position.set(
+      Math.cos(angle) * p.orbitR,
+      p.yOffset + Math.sin(time * 0.3 + i) * 0.3,
+      Math.sin(angle) * p.orbitR
+    );
+    mesh.rotation.y = time * 0.35;
 
-    // Update label
-    tmpV.copy(mesh.position);
-    tmpV.project(camera);
+    // Project to screen for label
+    tmpV.copy(mesh.position).project(camera);
     const sx = (tmpV.x * 0.5 + 0.5) * window.innerWidth;
     const sy = -(tmpV.y * 0.5 - 0.5) * window.innerHeight;
     labels[i].style.left = sx + 'px';
-    labels[i].style.top = (sy - pd.radius * 55 - 12) + 'px';
-    labels[i].style.opacity = tmpV.z < 1 ? '0.85' : '0'; // hide if behind
+    labels[i].style.top = (sy - p.radius * 60 - 8) + 'px';
+    labels[i].style.display = tmpV.z < 1 ? 'block' : 'none';
   });
 
-  // Spin disk rings
-  diskInner.rotation.z = time * 0.35;
-  diskMid.rotation.z = -time * 0.22;
-  diskOuter.rotation.z = time * 0.15;
+  // Black hole glow pulse
+  glow1.material.opacity = 0.13 + Math.sin(time * 1.2) * 0.04;
+  glow2.material.opacity = 0.05 + Math.sin(time * 0.8) * 0.02;
 
-  // Black hole photon sphere pulse
-  photonSphere.material.opacity = 0.10 + Math.sin(time * 1.5) * 0.04;
-
-  // Gentle camera orbit
-  const camAngle = time * 0.04;
-  camera.position.x = Math.sin(camAngle) * 3;
-  camera.position.z = 22 + Math.cos(camAngle) * 2;
-  camera.position.y = 8 + Math.sin(time * 0.06) * 1.5;
+  // Slow camera drift around the scene
+  const camA = time * 0.035;
+  camera.position.x = Math.sin(camA) * 4;
+  camera.position.z = 20 + Math.cos(camA) * 3;
+  camera.position.y = 16 + Math.sin(time * 0.05) * 1.5;
   camera.lookAt(0, 0, 0);
 
   renderer.render(scene, camera);
