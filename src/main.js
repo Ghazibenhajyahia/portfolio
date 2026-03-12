@@ -93,27 +93,26 @@ beam.target = beamTarget;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function onCanvasClick(e) {
-  const rect = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
+// Track mouse for hover cursor + click
+window.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(ufoMeshes, true);
+  document.body.style.cursor = hits.length > 0 ? 'pointer' : '';
+});
 
-  // Get world-space meshes for raycasting
-  const worldMeshes = ufoMeshes.map((m) => {
-    const clone = m.clone();
-    clone.applyMatrix4(ufo.matrixWorld);
-    return clone;
-  });
-
+function onCanvasClick(e) {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(ufoMeshes, true);
   if (hits.length > 0) {
     showAlienModal();
   }
 }
 
-canvas.addEventListener('click', onCanvasClick);
+window.addEventListener('click', onCanvasClick);
 
 // ── Alien ID Modal ────────────────────────────────────────
 function showAlienModal() {
