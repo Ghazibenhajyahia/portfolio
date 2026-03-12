@@ -129,6 +129,15 @@ const PLANETS = [
       <br><p style="font-family:monospace;color:#00ff88;font-size:.8rem">ENTITY: GBH-Ω-7749-ARCHITECT<br>
       THREAT LEVEL: ■■■■■ CREATIVE<br>STATUS: ● ACTIVE</p>
       <br><p style="opacity:.4;font-size:.65rem">DOCUMENT #XF-2749 · EYES ONLY</p>` }
+  },
+  {
+    name: 'FARM',        color: 0x44ff44, r: 0.50, orbitR: 15.5, phase: Math.PI * 0.2,  yOff: -0.6,
+    link: 'farm.html',
+    info: { title: '[SECTOR Ψ — BIOFARM]',
+      html: `<p>A classified cultivation zone.<br>Mutated organisms grown from Ghazi's stack.</p>
+      <br><p style="color:#44ff44;font-size:.8rem">▸ Laravel Beast · Node Slug<br>▸ WordPress Vine · Flutter Bloom<br>▸ Figma Crystal · Postgres Stone</p>
+      <br><p style="opacity:.5;font-size:.72rem">Harvest resources → brew the Perception Module → see the full picture.</p>
+      <br><a href="farm.html" style="color:#44ff44;font-size:.75rem;letter-spacing:.15em;border:1px solid #44ff4440;padding:.3rem .8rem;text-decoration:none">→ ENTER BIOFARM</a>` }
   }
 ];
 
