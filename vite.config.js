@@ -8,8 +8,9 @@ export default {
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
+        main:      resolve(__dirname, 'index.html'),
         blackhole: resolve(__dirname, 'blackhole.html'),
+        enigma:    resolve(__dirname, 'enigma.html'),
       }
     }
   }
