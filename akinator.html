@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>// WHO AM I — NEURAL SCAN //</title>
+  <link rel="stylesheet" href="/src/akinator.css"/>
+</head>
+<body>
+
+  <canvas id="ak-canvas"></canvas>
+
+  <header>
+    <span class="hdr">◈ G.E.N.I.E — GENERATIVE ENTITY NEURAL INTELLIGENCE ENGINE</span>
+    <a href="index.html" class="back-link">← EXIT</a>
+  </header>
+
+  <main>
+    <!-- AI Entity -->
+    <div class="ai-panel">
+      <div class="ai-orb-wrap">
+        <div class="ai-orb" id="ai-orb">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+          <div class="orb-eye" id="orb-eye">
+            <div class="orb-pupil" id="orb-pupil"></div>
+            <div class="orb-iris"></div>
+          </div>
+          <div class="orb-glow"></div>
+        </div>
+      </div>
+
+      <div class="confidence-panel">
+        <div class="conf-label">IDENTITY CONFIDENCE</div>
+        <div class="conf-bar">
+          <div class="conf-fill" id="conf-fill"></div>
+        </div>
+        <div class="conf-pct" id="conf-pct">0%</div>
+      </div>
+
+      <div class="ai-name">G.E.N.I.E</div>
+      <div class="ai-sub">v2.749 · Omniscient Mode</div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="chat-panel">
+      <div class="chat-log" id="chat-log"></div>
+
+      <div class="answer-area" id="answer-area">
+        <button class="ans-btn yes" id="btn-yes">YES ✓</button>
+        <button class="ans-btn maybe" id="btn-maybe">MAYBE ◈</button>
+        <button class="ans-btn no" id="btn-no">NO ✗</button>
+      </div>
+
+      <div class="typing-indicator" id="typing" style="display:none">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Reveal overlay -->
+  <div id="reveal-overlay">
+    <div class="reveal-card">
+      <div class="reveal-stamp">✓ IDENTITY CONFIRMED</div>
+      <div class="reveal-avatar">
+        <div class="rev-face">
+          <div class="rev-ant l"></div>
+          <div class="rev-ant r"></div>
+          <div class="rev-head">
+            <div class="rev-eyes">
+              <div class="rev-eye"></div><div class="rev-eye"></div>
+            </div>
+          </div>
+          <div class="rev-badge">GBH-Ω</div>
+        </div>
+      </div>
+      <h2 id="reveal-name">GHAZI BEN HADJ YAHIA</h2>
+      <div class="reveal-tags" id="reveal-tags"></div>
+      <p id="reveal-desc"></p>
+      <div class="reveal-links" id="reveal-links"></div>
+      <button class="play-again-btn" id="play-again">▶ PLAY AGAIN</button>
+      <a href="index.html" class="play-again-btn" style="margin-top:.5rem;display:block;text-align:center;text-decoration:none">← BACK TO PORTFOLIO</a>
+    </div>
+  </div>
+
+  <script type="module" src="/src/akinator.js"></script>
+</body>
+</html>
