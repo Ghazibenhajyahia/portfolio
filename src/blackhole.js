@@ -57,7 +57,7 @@ function makeDiskBand(rMin, rMax, count, color, size, opacity) {
   for (let i = 0; i < count; i++) {
     angles[i] = Math.random() * Math.PI * 2;
     radii[i] = rMin + Math.random() * (rMax - rMin);
-    speeds[i] = 0.025 / Math.sqrt(radii[i]); // Kepler
+    speeds[i] = 0.07 / Math.pow(radii[i], 1.5); // Kepler r^1.5
     const ySpread = (1 - (radii[i] - rMin) / (rMax - rMin)) * 0.25;
     pos[i * 3]     = Math.cos(angles[i]) * radii[i];
     pos[i * 3 + 1] = (Math.random() - 0.5) * ySpread;
@@ -126,7 +126,8 @@ const PLANETS = [
   }
 ];
 
-PLANETS.forEach(p => { p.speed = 0.38 / Math.sqrt(p.orbitR); });
+// True Kepler: ω ∝ 1/r^1.5  — inner orbits dramatically faster
+PLANETS.forEach(p => { p.speed = 14.0 / Math.pow(p.orbitR, 1.5); });
 
 // Build planet meshes — store index for raycasting
 const planetMeshes = [];
