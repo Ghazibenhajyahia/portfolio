@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>// THE ARCHITECT — FINAL TRANSMISSION //</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      width:100%; height:100%; overflow:hidden;
+      background:#000; color:#e8e8e8;
+      font-family:'Courier New',Courier,monospace;
+    }
+
+    /* Starfield */
+    #starfield { position:fixed; inset:0; z-index:0; }
+
+    /* Spaceship — CSS pixel art */
+    #ship {
+      position:fixed; bottom:15%; left:50%;
+      transform:translateX(-50%);
+      z-index:5;
+      animation:ship-float 4s ease-in-out infinite;
+    }
+    .ship-wrap { position:relative; width:160px; height:90px; filter:grayscale(1) contrast(1.2); }
+
+    /* Hull */
+    .hull { position:absolute; top:25px; left:20px; right:20px; height:35px; background:#ccc; border-radius:5px 30px 30px 5px; border:2px solid #fff; }
+    /* Cockpit */
+    .cockpit { position:absolute; top:10px; right:35px; width:40px; height:25px; background:#aaa; border-radius:50% 50% 0 0; border:2px solid #fff; border-bottom:none; }
+    /* Wings */
+    .wing-t { position:absolute; top:5px; left:25px; width:50px; height:22px; background:#bbb; clip-path:polygon(0 100%,100% 100%,60% 0); border:1px solid #fff; }
+    .wing-b { position:absolute; bottom:5px; left:25px; width:50px; height:22px; background:#bbb; clip-path:polygon(0 0,100% 0,60% 100%); border:1px solid #fff; }
+    /* Engine glow */
+    .engine { position:absolute; top:50%; left:12px; transform:translateY(-50%); width:14px; height:14px; background:#fff; border-radius:50%; box-shadow:0 0 10px #fff, 0 0 20px #aaa; animation:engine-pulse 0.4s ease-in-out infinite; }
+    .engine-trail { position:absolute; top:50%; left:-30px; transform:translateY(-50%); width:34px; height:6px; background:linear-gradient(to left,#fff,transparent); animation:trail-flicker 0.3s ease-in-out infinite; }
+    /* Antenna */
+    .antenna { position:absolute; top:-12px; right:50px; width:2px; height:14px; background:#fff; }
+    .antenna::after { content:''; display:block; width:6px; height:6px; background:#fff; border-radius:50%; margin-left:-2px; margin-top:-3px; }
+    /* Windows */
+    .win { position:absolute; top:33px; width:8px; height:8px; background:#333; border:1px solid #fff; border-radius:1px; }
+    .win.w1 { right:60px; }
+    .win.w2 { right:75px; }
+    .win.w3 { right:90px; }
+
+    @keyframes ship-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
+    @keyframes engine-pulse { 0%,100%{opacity:1;transform:translateY(-50%) scale(1)} 50%{opacity:.7;transform:translateY(-50%) scale(.85)} }
+    @keyframes trail-flicker { 0%,100%{opacity:.9;width:34px} 50%{opacity:.5;width:24px} }
+
+    /* Scanline overlay */
+    #scanlines {
+      position:fixed; inset:0; z-index:4; pointer-events:none;
+      background:repeating-linear-gradient(to bottom, transparent, transparent 3px, rgba(0,0,0,.12) 3px, rgba(0,0,0,.12) 4px);
+    }
+
+    /* Vignette */
+    #vignette {
+      position:fixed; inset:0; z-index:3; pointer-events:none;
+      background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.7) 100%);
+    }
+
+    /* Credits scroll */
+    #credits-wrap {
+      position:fixed; inset:0; z-index:6; pointer-events:none;
+      display:flex; justify-content:center; align-items:flex-start;
+      overflow:hidden;
+    }
+
+    #credits {
+      text-align:center;
+      padding: 0 2rem 0 2rem;
+      max-width:640px;
+      animation:scroll-up 60s linear forwards;
+      /* Start below screen, scroll to above */
+      transform:translateY(100vh);
+    }
+
+    @keyframes scroll-up {
+      from { transform:translateY(100vh); }
+      to   { transform:translateY(-200%); }
+    }
+
+    .cr-spacer { height:40vh; }
+    .cr-logo { font-size:1.6rem; letter-spacing:.3em; font-weight:bold; margin-bottom:.5rem; }
+    .cr-sub { font-size:.75rem; letter-spacing:.4em; opacity:.5; margin-bottom:3rem; }
+    .cr-section { margin-bottom:2.5rem; }
+    .cr-label { font-size:.6rem; letter-spacing:.4em; opacity:.4; margin-bottom:.4rem; }
+    .cr-name { font-size:1rem; letter-spacing:.2em; font-weight:bold; margin-bottom:.2rem; }
+    .cr-role { font-size:.75rem; letter-spacing:.15em; opacity:.65; margin-bottom:1.2rem; }
+    .cr-divider { width:60px; height:1px; background:#fff; opacity:.2; margin:2rem auto; }
+    .cr-quote { font-size:.8rem; line-height:2; opacity:.6; font-style:italic; max-width:400px; margin:0 auto 3rem; }
+    .cr-end { font-size:.7rem; letter-spacing:.3em; opacity:.35; margin-top:4rem; }
+    .cr-spacer-end { height:60vh; }
+
+    /* Skip button */
+    #skip-btn {
+      position:fixed; bottom:2rem; right:2rem; z-index:100;
+      background:transparent; border:1px solid rgba(255,255,255,.2);
+      color:rgba(255,255,255,.4); font-family:'Courier New',monospace;
+      font-size:.65rem; letter-spacing:.2em;
+      padding:.4rem .9rem; cursor:pointer;
+      transition:color .3s, border-color .3s;
+    }
+    #skip-btn:hover { color:#fff; border-color:#fff; }
+  </style>
+</head>
+<body>
+
+  <canvas id="starfield"></canvas>
+  <div id="scanlines"></div>
+  <div id="vignette"></div>
+
+  <!-- CSS Spaceship -->
+  <div id="ship">
+    <div class="ship-wrap">
+      <div class="engine-trail"></div>
+      <div class="engine"></div>
+      <div class="wing-t"></div>
+      <div class="wing-b"></div>
+      <div class="hull">
+        <div class="win w1"></div>
+        <div class="win w2"></div>
+        <div class="win w3"></div>
+      </div>
+      <div class="cockpit"></div>
+      <div class="antenna"></div>
+    </div>
+  </div>
+
+  <!-- Scrolling Credits -->
+  <div id="credits-wrap">
+    <div id="credits">
+      <div class="cr-spacer"></div>
+
+      <div class="cr-logo">GBH-Ω-7749</div>
+      <div class="cr-sub">A GHAZI BEN HADJ YAHIA PRODUCTION</div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-section">
+        <div class="cr-label">DIRECTED BY</div>
+        <div class="cr-name">GHAZI BEN HADJ YAHIA</div>
+        <div class="cr-role">Full-Stack Developer · Designer · Builder</div>
+      </div>
+
+      <div class="cr-section">
+        <div class="cr-label">WRITTEN IN</div>
+        <div class="cr-name">LARAVEL · FLUTTER · NODE.JS</div>
+        <div class="cr-role">With contributions from PHP, Dart & JavaScript</div>
+      </div>
+
+      <div class="cr-section">
+        <div class="cr-label">PRODUCED AT</div>
+        <div class="cr-name">PLANET EARTH</div>
+        <div class="cr-role">Tunisia · North Africa · Sector 7G</div>
+      </div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-section">
+        <div class="cr-label">STARRING</div>
+        <div class="cr-name">LARAVEL BEAST</div>
+        <div class="cr-role">as The Backbone</div>
+        <div class="cr-name">FLUTTER BLOOM</div>
+        <div class="cr-role">as The Shape-Shifter</div>
+        <div class="cr-name">NODE SLUG</div>
+        <div class="cr-role">as The Async Wanderer</div>
+        <div class="cr-name">WORDPRESS VINE</div>
+        <div class="cr-role">as The Ancient One</div>
+        <div class="cr-name">POSTGRES STONE</div>
+        <div class="cr-role">as The Memory Keeper</div>
+      </div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-section">
+        <div class="cr-label">OPERATIONS DEPLOYED</div>
+        <div class="cr-name">lagora.tn</div>
+        <div class="cr-role">Web marketplace — WordPress</div>
+        <div class="cr-name">thelandlord.tn</div>
+        <div class="cr-role">Mobile application — Flutter &amp; Node.js</div>
+        <div class="cr-name">manager.thelandlord.tn</div>
+        <div class="cr-role">Property Management System — Laravel</div>
+        <div class="cr-name">Secadenordigital SCADA</div>
+        <div class="cr-role">Industrial ERP System — Laravel</div>
+        <div class="cr-name">envirofest.tn</div>
+        <div class="cr-role">Environmental Festival Platform — WordPress</div>
+        <div class="cr-name">conciergetunisie</div>
+        <div class="cr-role">Concierge Service Platform — WordPress</div>
+      </div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-section">
+        <div class="cr-label">VISUAL DESIGN BY</div>
+        <div class="cr-name">GHAZI BEN HADJ YAHIA</div>
+        <div class="cr-role">Figma · UI/UX · Cultural Event Design</div>
+      </div>
+
+      <div class="cr-section">
+        <div class="cr-label">DATABASE ARCHITECTURE</div>
+        <div class="cr-name">MYSQL · POSTGRESQL</div>
+        <div class="cr-role">Custodians of the data</div>
+      </div>
+
+      <div class="cr-section">
+        <div class="cr-label">VERSION CONTROL</div>
+        <div class="cr-name">GIT</div>
+        <div class="cr-role">Witness to every commit, every mistake, every fix</div>
+      </div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-section">
+        <div class="cr-label">CONTACT THE ARCHITECT</div>
+        <div class="cr-name">gbhy1919@gmail.com</div>
+        <div class="cr-role">github.com/Ghazibenhajyahia</div>
+        <div class="cr-role">linkedin.com/in/ghazi-ben-hadj-yahia</div>
+        <div class="cr-role">@ghazi_bhy</div>
+      </div>
+
+      <div class="cr-divider"></div>
+
+      <div class="cr-quote">
+        "He who builds the web also shapes the world."<br>
+        — GBH-Ω-7749, Field Notes, 2024
+      </div>
+
+      <div class="cr-section">
+        <div class="cr-label">SPECIAL THANKS</div>
+        <div class="cr-name">Stack Overflow · The Open Source Community</div>
+        <div class="cr-role">Caffeine · Deadlines · The Void</div>
+      </div>
+
+      <div class="cr-end">NO FRAMEWORKS WERE HARMED IN THE MAKING OF THIS PORTFOLIO</div>
+      <div class="cr-end" style="margin-top:.8rem;font-size:.55rem">GBH-Ω · CLASS-7 COGNITIVE ENTITY · ACTIVE</div>
+
+      <div class="cr-spacer-end"></div>
+    </div>
+  </div>
+
+  <button id="skip-btn" onclick="window.location.href='index.html'">SKIP → RETURN</button>
+
+  <script>
+    // Starfield canvas
+    const cv = document.getElementById('starfield');
+    const ctx = cv.getContext('2d');
+    cv.width = window.innerWidth;
+    cv.height = window.innerHeight;
+
+    const stars = Array.from({length:200}, () => ({
+      x: Math.random() * cv.width,
+      y: Math.random() * cv.height,
+      r: Math.random() * 1.2 + 0.2,
+      speed: Math.random() * 0.4 + 0.1,
+      twinkle: Math.random() * Math.PI * 2
+    }));
+
+    let t = 0;
+    function drawStars() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      t += 0.02;
+      stars.forEach(s => {
+        s.x -= s.speed;
+        if (s.x < 0) { s.x = cv.width; s.y = Math.random() * cv.height; }
+        const alpha = 0.5 + Math.sin(t + s.twinkle) * 0.4;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // Auto redirect after credits finish
+    setTimeout(() => { window.location.href = 'index.html'; }, 63000);
+  </script>
+</body>
+</html>
