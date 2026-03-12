@@ -433,3 +433,55 @@ p {
   30%  { opacity: 0.6; transform: scale(0.3); }
   100% { opacity: 1; transform: scale(8); }
 }
+
+/* ── Devicon theme overrides ── */
+.devicon-laravel-plain,
+.devicon-wordpress-plain,
+.devicon-flutter-plain,
+.devicon-nodejs-plain,
+.devicon-mysql-plain,
+.devicon-postgresql-plain,
+.devicon-figma-plain,
+.devicon-git-plain,
+.devicon-javascript-plain,
+.devicon-threejs-original,
+.devicon-github-original,
+.devicon-linkedin-plain,
+.devicon-google-plain,
+.devicon-facebook-plain,
+.devicon-css3-plain,
+.devicon-php-plain {
+  color: var(--green) !important;
+  font-size: 1em;
+}
+
+/* ── Project card icons ── */
+.project-icons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.6rem;
+  opacity: 0.8;
+}
+
+/* ── Skills list icons ── */
+.skills-list span i {
+  margin-right: 0.35rem;
+  vertical-align: middle;
+  font-size: 1.1em;
+}
+
+/* ── Contact link icons ── */
+.contact-link i,
+.contact-link .social-icon {
+  margin-right: 0.4rem;
+  vertical-align: middle;
+  font-size: 1em;
+}
+
+.social-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  color: var(--green);
+}
