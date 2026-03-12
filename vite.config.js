@@ -13,6 +13,7 @@ export default {
         enigma:    resolve(__dirname, 'enigma.html'),
         farm:      resolve(__dirname, 'farm.html'),
         credits:   resolve(__dirname, 'credits.html'),
+        akinator:  resolve(__dirname, 'akinator.html'),
       }
     }
   }
