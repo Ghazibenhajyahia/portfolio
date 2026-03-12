@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>// SECTOR Ω — RESTRICTED //</title>
+  <link rel="stylesheet" href="/src/enigma.css" />
+</head>
+<body>
+
+  <!-- Floating geometric background shapes -->
+  <div class="geo-bg">
+    <div class="geo-rect" style="width:180px;height:80px;top:8%;left:5%;animation-delay:0s"></div>
+    <div class="geo-rect" style="width:90px;height:140px;top:20%;right:8%;animation-delay:1.2s"></div>
+    <div class="geo-rect" style="width:220px;height:40px;bottom:15%;left:15%;animation-delay:0.7s"></div>
+    <div class="geo-rect" style="width:60px;height:60px;top:60%;left:3%;animation-delay:2s"></div>
+    <div class="geo-rect" style="width:140px;height:90px;bottom:25%;right:5%;animation-delay:1.5s"></div>
+    <div class="geo-rect" style="width:50px;height:200px;top:5%;left:40%;animation-delay:0.3s"></div>
+    <div class="geo-rect" style="width:100px;height:50px;bottom:8%;right:25%;animation-delay:2.5s"></div>
+    <div class="geo-line h" style="top:30%;left:0;width:100%"></div>
+    <div class="geo-line h" style="top:70%;left:0;width:100%"></div>
+    <div class="geo-line v" style="left:30%;top:0;height:100%"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <span class="header-stamp">⚠ RESTRICTED ZONE — SECTOR Ω ⚠</span>
+    <a href="blackhole.html" class="back-link">← EVACUATE</a>
+  </header>
+
+  <!-- Main game layout -->
+  <main>
+
+    <!-- LEFT: Alien Avatar + Speech -->
+    <div class="alien-panel">
+      <div class="alien-wrapper">
+        <!-- CSS Alien Character -->
+        <div class="alien">
+          <div class="alien-antenna left"></div>
+          <div class="alien-antenna right"></div>
+          <div class="alien-head">
+            <div class="alien-eyes">
+              <div class="alien-eye"><div class="alien-pupil"></div></div>
+              <div class="alien-eye"><div class="alien-pupil"></div></div>
+            </div>
+            <div class="alien-mouth"></div>
+          </div>
+          <div class="alien-body">
+            <div class="alien-badge">GBH-Ω</div>
+          </div>
+          <div class="alien-legs">
+            <div class="alien-leg"></div>
+            <div class="alien-leg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speech bubble -->
+      <div class="speech-bubble">
+        <span id="speech-text">You've entered the core. Solve my riddles to learn who I am.</span>
+      </div>
+
+      <!-- Score -->
+      <div class="score-panel">
+        <span class="score-label">DECRYPTED</span>
+        <span id="score-display">0 / 5</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Enigma Table -->
+    <div class="enigma-panel">
+      <div class="enigma-header">[ENCRYPTED FILES — AWAITING DECRYPTION]</div>
+
+      <div class="enigma-table">
+
+        <div class="enigma-row" id="enigma-0">
+          <div class="enigma-num">01</div>
+          <div class="enigma-content">
+            <p class="enigma-q">I speak in functions, breathe in loops, and build things no one can touch but everyone uses. What am I?</p>
+            <div class="enigma-input-row">
+              <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="developer" data-idx="0" />
+              <button class="enigma-btn" onclick="checkAnswer(0)">DECRYPT</button>
+            </div>
+            <p class="enigma-hint" id="hint-0"></p>
+          </div>
+        </div>
+
+        <div class="enigma-row" id="enigma-1">
+          <div class="enigma-num">02</div>
+          <div class="enigma-content">
+            <p class="enigma-q">I orbit the black hole closest. Click me and you can reach my creator. Which planet am I?</p>
+            <div class="enigma-input-row">
+              <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="contact" data-idx="1" />
+              <button class="enigma-btn" onclick="checkAnswer(1)">DECRYPT</button>
+            </div>
+            <p class="enigma-hint" id="hint-1"></p>
+          </div>
+        </div>
+
+        <div class="enigma-row" id="enigma-2">
+          <div class="enigma-num">03</div>
+          <div class="enigma-content">
+            <p class="enigma-q">Three of my projects share the same engine. WordPress. Name any one of them (domain only).</p>
+            <div class="enigma-input-row">
+              <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="lagora|envirofest|conciergetunisie" data-idx="2" />
+              <button class="enigma-btn" onclick="checkAnswer(2)">DECRYPT</button>
+            </div>
+            <p class="enigma-hint" id="hint-2"></p>
+          </div>
+        </div>
+
+        <div class="enigma-row" id="enigma-3">
+          <div class="enigma-num">04</div>
+          <div class="enigma-content">
+            <p class="enigma-q">DECODE THIS → 07 08 01 26 09</p>
+            <p class="enigma-sub">(A=01, B=02 ... Z=26. The word describes what I do with code.)</p>
+            <div class="enigma-input-row">
+              <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="ghazi|build" data-idx="3" />
+              <button class="enigma-btn" onclick="checkAnswer(3)">DECRYPT</button>
+            </div>
+            <p class="enigma-hint" id="hint-3"></p>
+          </div>
+        </div>
+
+        <div class="enigma-row" id="enigma-4">
+          <div class="enigma-num">05</div>
+          <div class="enigma-content">
+            <p class="enigma-q">My designation is GBH-Ω-7749-ARCHITECT. What country am I operating from?</p>
+            <div class="enigma-input-row">
+              <input type="text" placeholder="TYPE ANSWER..." class="enigma-input" data-answer="tunisia" data-idx="4" />
+              <button class="enigma-btn" onclick="checkAnswer(4)">DECRYPT</button>
+            </div>
+            <p class="enigma-hint" id="hint-4"></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Win screen -->
+  <div id="win-screen">
+    <div class="win-card">
+      <div class="win-stamp">✓ FULLY DECRYPTED</div>
+      <h2>IDENTITY CONFIRMED</h2>
+      <p>GHAZI BEN HADJ YAHIA<br>Full-Stack Developer · Designer · Builder<br>Tunisia, North Africa</p>
+      <div class="win-links">
+        <a href="index.html">RETURN TO PORTFOLIO</a>
+        <a href="blackhole.html">BACK TO THE VOID</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/src/enigma.js"></script>
+</body>
+</html>
