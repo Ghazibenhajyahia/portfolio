@@ -257,3 +257,131 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Alien ID Modal ── */
+#alien-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 3, 8, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#alien-modal.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.alien-card {
+  border: 1px solid var(--green);
+  background: rgba(0, 10, 5, 0.95);
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 0 40px #00ff8833, inset 0 0 20px #00ff8808;
+  animation: scanlines 0.1s steps(1) infinite;
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+.alien-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-green);
+}
+
+.alien-stamp {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: #ff4444;
+  text-shadow: 0 0 10px #ff444488;
+}
+
+.alien-close {
+  background: none;
+  border: 1px solid var(--border-green);
+  color: var(--green);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alien-close:hover {
+  background: var(--dim-green);
+  box-shadow: 0 0 10px #00ff8844;
+}
+
+.alien-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.alien-field {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  align-items: start;
+  font-size: 0.75rem;
+}
+
+.alien-label {
+  color: var(--green);
+  opacity: 0.55;
+  letter-spacing: 0.15em;
+  padding-top: 0.1rem;
+}
+
+.alien-value {
+  color: #e0ffe8;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+.alien-value.threat {
+  color: #ff8800;
+  text-shadow: 0 0 8px #ff880055;
+}
+
+.alien-value.blink {
+  animation: blink-status 1.4s ease-in-out infinite;
+  color: var(--green);
+}
+
+@keyframes blink-status {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.alien-card-footer {
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid var(--border-green);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--green);
+  opacity: 0.35;
+  text-align: center;
+}
+
+@media (max-width: 500px) {
+  .alien-field {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
