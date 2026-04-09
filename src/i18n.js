@@ -1,6 +1,27 @@
 // ── Translations ──────────────────────────────────────────
 export const translations = {
   en: {
+    // blackhole
+    'bh-hint':     '[ TAP A PLANET TO DECRYPT ]',
+    'bh-back':     '← RETURN TO SURFACE',
+    // enigma
+    'en-stamp':    '⚠ RESTRICTED ZONE — SECTOR Ω ⚠',
+    'en-back':     '← EVACUATE',
+    'en-speech':   "You've entered the core. Solve my riddles to learn who I am.",
+    'en-score-label': 'DECRYPTED',
+    'en-header':   '[ENCRYPTED FILES — AWAITING DECRYPTION]',
+    'en-q0':       'I speak in functions, breathe in loops, and build things no one can touch but everyone uses. What am I?',
+    'en-q1':       'I orbit the black hole closest. Click me and you can reach my creator. Which planet am I?',
+    'en-q2':       'Three of my projects share the same engine. WordPress. Name any one of them (domain only).',
+    'en-q3':       'DECODE THIS → 07 08 01 26 09',
+    'en-q3sub':    '(A=01, B=02 ... Z=26. The word describes what I do with code.)',
+    'en-q4':       'My designation is GBH-Ω-7749-ARCHITECT. What country am I operating from?',
+    'en-win-stamp':'✓ FULLY DECRYPTED',
+    'en-win-title':'IDENTITY CONFIRMED',
+    'en-win-body': 'GHAZI BEN HADJ YAHIA<br>Full-Stack Developer · Designer · Builder<br>Tunisia, North Africa',
+    'en-win-link1':'RETURN TO PORTFOLIO',
+    'en-win-link2':'BACK TO THE VOID',
+    // main
     classified:    'CLASSIFIED',
     subtitle:      'Full-Stack Developer · Designer · Builder',
     scroll:        '▼ SCROLL TO DECRYPT ▼',
@@ -23,6 +44,27 @@ export const translations = {
     'contact-text':'Available for freelance, collaborations, and interesting problems.',
   },
   fr: {
+    // blackhole
+    'bh-hint':     '[ APPUYEZ SUR UNE PLANÈTE POUR DÉCRYPTER ]',
+    'bh-back':     '← RETOURNER À LA SURFACE',
+    // enigma
+    'en-stamp':    '⚠ ZONE RESTREINTE — SECTEUR Ω ⚠',
+    'en-back':     '← ÉVACUER',
+    'en-speech':   "Vous avez pénétré le noyau. Résolvez mes énigmes pour découvrir qui je suis.",
+    'en-score-label': 'DÉCRYPTÉ',
+    'en-header':   '[FICHIERS CHIFFRÉS — EN ATTENTE DE DÉCRYPTAGE]',
+    'en-q0':       'Je parle en fonctions, je respire en boucles, et je construis ce que personne ne peut toucher mais que tout le monde utilise. Que suis-je ?',
+    'en-q1':       'J\'orbite le plus près du trou noir. Cliquez sur moi pour contacter mon créateur. Quelle planète suis-je ?',
+    'en-q2':       'Trois de mes projets partagent le même moteur. WordPress. Nommez-en un (domaine uniquement).',
+    'en-q3':       'DÉCODEZ CECI → 07 08 01 26 09',
+    'en-q3sub':    '(A=01, B=02 ... Z=26. Le mot décrit ce que je fais avec le code.)',
+    'en-q4':       'Mon identifiant est GBH-Ω-7749-ARCHITECT. De quel pays est-ce que j\'opère ?',
+    'en-win-stamp':'✓ ENTIÈREMENT DÉCRYPTÉ',
+    'en-win-title':'IDENTITÉ CONFIRMÉE',
+    'en-win-body': 'GHAZI BEN HADJ YAHIA<br>Développeur Full-Stack · Designer · Créateur<br>Tunisie, Afrique du Nord',
+    'en-win-link1':'RETOUR AU PORTFOLIO',
+    'en-win-link2':'RETOUR AU VIDE',
+    // main
     classified:    'CLASSIFIÉ',
     subtitle:      'Développeur Full-Stack · Designer · Créateur',
     scroll:        '▼ DÉFILER POUR DÉCRYPTER ▼',
