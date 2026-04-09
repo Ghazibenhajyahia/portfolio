@@ -232,8 +232,96 @@ main {
 }
 .play-again-btn:hover { background:#0a2a14; }
 
-/* Responsive */
-@media(max-width:600px) {
-  main { grid-template-columns:1fr; }
-  .ai-panel { border-right:none; border-bottom:1px solid var(--border); height:auto; padding:1rem; flex-direction:row; flex-wrap:wrap; }
+/* ── Responsive / Mobile ───────────────────────── */
+@media(max-width:700px) {
+  /* Stack vertically: AI strip on top, chat below */
+  main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: calc(100vh - 44px);
+  }
+
+  /* AI panel: slim horizontal strip */
+  .ai-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: .75rem 1rem;
+    gap: .75rem;
+    height: auto;
+    overflow-y: visible;
+    min-height: 0;
+  }
+
+  /* Shrink orb on mobile */
+  .ai-orb-wrap { width: 56px; height: 56px; flex-shrink: 0; }
+  .ai-orb { width: 56px; height: 56px; }
+  .orb-ring.r1 { inset: -6px; }
+  .orb-ring.r2 { inset: -12px; }
+  .orb-ring.r3 { inset: -18px; }
+  .orb-eye { width: 24px; height: 24px; }
+  .orb-pupil { width: 10px; height: 10px; }
+
+  /* Confidence panel inline */
+  .confidence-panel {
+    flex: 1;
+    gap: .25rem;
+  }
+  .conf-label { font-size: .5rem; }
+  .conf-pct { font-size: .9rem; }
+
+  /* Hide name/sub on mobile to save space */
+  .ai-name, .ai-sub { display: none; }
+
+  /* Chat fills remaining space */
+  .chat-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .chat-log {
+    flex: 1;
+    padding: .75rem;
+    gap: .6rem;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* Bigger bubbles easier to read */
+  .msg-bubble { font-size: .8rem; line-height: 1.6; padding: .55rem .8rem; }
+  .msg-sender { font-size: .5rem; }
+
+  /* Answer buttons: bigger tap targets */
+  .answer-area {
+    padding: .6rem .75rem;
+    gap: .5rem;
+  }
+  .ans-btn {
+    font-size: .7rem;
+    padding: .75rem .4rem;
+    letter-spacing: .05em;
+  }
+
+  /* Typing indicator */
+  .typing-indicator { padding: .5rem .75rem; }
+
+  /* Reveal card */
+  .reveal-card {
+    width: 96%;
+    max-width: 96vw;
+    padding: 1.5rem 1rem;
+  }
+  .reveal-card h2 { font-size: 1.1rem; }
+  .reveal-stamp { font-size: .52rem; }
+  .reveal-card p { font-size: .72rem; }
+  .reveal-links a { font-size: .62rem; padding: .2rem .4rem; }
+
+  /* Header */
+  header { padding: .5rem 1rem; }
+  .hdr { font-size: .48rem; letter-spacing: .1em; }
 }
