@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { XFilesTheme } from './audio.js';
+import { initI18n } from './i18n.js';
 
 gsap.registerPlugin(ScrollTrigger);
+initI18n();
 
 // ── Audio ─────────────────────────────────────────────────
 const theme = new XFilesTheme();
