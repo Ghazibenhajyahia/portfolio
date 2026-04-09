@@ -10,9 +10,18 @@ renderer.setClearColor(0x000008);
 // ── Scene ─────────────────────────────────────────────────
 const scene = new THREE.Scene();
 
-// Camera: 40° above XZ plane for clear 3D disk view
-const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 800);
-camera.position.set(0, 14, 18);
+// Camera: adapts to mobile portrait vs desktop
+const isMobile = () => window.innerWidth < 700;
+function getCameraPos() {
+  if (isMobile()) {
+    // Portrait: zoom out and raise camera so all orbits visible
+    return { x: 0, y: 22, z: 28 };
+  }
+  return { x: 0, y: 14, z: 18 };
+}
+const camera = new THREE.PerspectiveCamera(isMobile() ? 65 : 52, window.innerWidth / window.innerHeight, 0.1, 800);
+const initCam = getCameraPos();
+camera.position.set(initCam.x, initCam.y, initCam.z);
 camera.lookAt(0, 0, 0);
 
 // ── Background stars ──────────────────────────────────────
@@ -224,20 +233,39 @@ window.addEventListener('mousemove', e => {
   document.body.style.cursor = (onBH || getHitPlanet(e)) ? 'pointer' : '';
 });
 
-window.addEventListener('click', e => {
-  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
-
-  // Click black hole core → enter enigma page
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+function handleTap(clientX, clientY) {
+  const fakeE = { clientX, clientY };
+  mouse.x = (clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   if (raycaster.intersectObject(bhCore).length > 0) {
     enterBlackHole(); return;
   }
-
-  const pd = getHitPlanet(e);
+  const pd = getHitPlanet(fakeE);
   if (pd) showPlanetModal(pd);
+}
+
+window.addEventListener('click', e => {
+  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
+  handleTap(e.clientX, e.clientY);
 });
+
+// Touch support for mobile
+let touchStartX = 0, touchStartY = 0;
+window.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchend', e => {
+  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  // Only treat as tap if finger didn't move much
+  if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+    handleTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  }
+}, { passive: true });
 
 function enterBlackHole() {
   const flash = document.createElement('div');
@@ -296,10 +324,13 @@ function animate() {
     labels[i].style.display = tmp.z < 1 ? 'block' : 'none';
   });
 
-  // Gentle camera orbit — slowly circles the scene
-  camera.position.x = Math.sin(time * 0.03) * 5;
-  camera.position.z = 18 + Math.cos(time * 0.03) * 3;
-  camera.position.y = 14 + Math.sin(time * 0.04) * 1.5;
+  // Gentle camera orbit — adapts to mobile
+  const baseZ = isMobile() ? 28 : 18;
+  const baseY = isMobile() ? 22 : 14;
+  const swayX = isMobile() ? 3 : 5;
+  camera.position.x = Math.sin(time * 0.03) * swayX;
+  camera.position.z = baseZ + Math.cos(time * 0.03) * 3;
+  camera.position.y = baseY + Math.sin(time * 0.04) * 1.5;
   camera.lookAt(0, 0, 0);
 
   renderer.render(scene, camera);
@@ -309,6 +340,7 @@ animate();
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
+  camera.fov = isMobile() ? 65 : 52;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
