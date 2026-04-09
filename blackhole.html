@@ -9,9 +9,9 @@
 <body>
   <canvas id="bh-canvas"></canvas>
 
-  <div id="bh-hint" id="bh-hint">[ TAP A PLANET TO DECRYPT ]</div>
+  <div id="bh-hint" data-i18n="bh-hint">[ TAP A PLANET TO DECRYPT ]</div>
 
-  <a href="index.html" id="back-btn">← RETURN TO SURFACE</a>
+  <a href="index.html" id="back-btn" data-i18n="bh-back">← RETURN TO SURFACE</a>
 
   <!-- Planet Info Modal -->
   <div id="planet-modal">
@@ -25,5 +25,9 @@
   </div>
 
   <script type="module" src="/src/blackhole.js"></script>
+  <script type="module">
+    import { initI18n } from '/src/i18n.js';
+    initI18n();
+  </script>
 </body>
 </html>
