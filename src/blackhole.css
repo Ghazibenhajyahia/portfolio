@@ -157,4 +157,41 @@ canvas#bh-canvas {
   text-shadow: 0 0 8px #00ff8888;
   transform: translate(-50%, -50%);
   z-index: 5;
+  white-space: nowrap;
+}
+
+/* ── Mobile responsive ── */
+@media (max-width: 600px) {
+  #back-btn {
+    top: 0.8rem;
+    left: 0.8rem;
+    font-size: 0.6rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  #bh-hint {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    bottom: 1rem;
+  }
+
+  .planet-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+  }
+
+  .planet-card {
+    width: 95%;
+    max-width: 95vw;
+  }
+
+  .planet-card-body {
+    padding: 1rem;
+    font-size: 0.78rem;
+  }
+
+  .planet-card-header {
+    padding: 0.8rem 1rem;
+    font-size: 0.68rem;
+  }
 }
