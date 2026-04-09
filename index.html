@@ -11,26 +11,27 @@
   <canvas id="bg"></canvas>
   <div id="blackhole-overlay"></div>
   <button id="mute-btn" title="Mute">🔊</button>
-  <a href="akinator.html" id="aki-btn" title="Who Am I?">◈ WHO AM I?</a>
+  <button id="lang-btn" title="Switch language">FR</button>
+  <a href="akinator.html" id="aki-btn" title="Who Am I?"><span data-i18n="aki">◈ WHO AM I?</span></a>
 
   <div id="content">
 
     <section id="hero">
-      <div class="classified-stamp">CLASSIFIED</div>
+      <div class="classified-stamp" data-i18n="classified">CLASSIFIED</div>
       <h1>GHAZI<br><span>BEN HADJ YAHIA</span></h1>
-      <p class="subtitle">Full-Stack Developer &middot; Designer &middot; Builder</p>
-      <div class="scroll-hint">&#x25BC; SCROLL TO DECRYPT &#x25BC;</div>
+      <p class="subtitle" data-i18n="subtitle">Full-Stack Developer &middot; Designer &middot; Builder</p>
+      <div class="scroll-hint" data-i18n="scroll">&#x25BC; SCROLL TO DECRYPT &#x25BC;</div>
     </section>
 
     <section id="about" class="reveal-section">
-      <div class="section-label">[FILE_01 &mdash; IDENTITY]</div>
-      <h2>About</h2>
-      <p>Full-stack developer specializing in web and mobile. Fluent in Laravel, Flutter, Node.js, and WordPress. I design my work too. Freelance in cultural events when the stars align.</p>
+      <div class="section-label" data-i18n="file01">[FILE_01 &mdash; IDENTITY]</div>
+      <h2 data-i18n="about">About</h2>
+      <p data-i18n="about-text">Full-stack developer specializing in web and mobile. Fluent in Laravel, Flutter, Node.js, and WordPress. I design my work too. Freelance in cultural events when the stars align.</p>
     </section>
 
     <section id="projects" class="reveal-section">
-      <div class="section-label">[FILE_02 &mdash; OPERATIONS]</div>
-      <h2>Projects</h2>
+      <div class="section-label" data-i18n="file02">[FILE_02 &mdash; OPERATIONS]</div>
+      <h2 data-i18n="projects">Projects</h2>
       <div class="projects-grid">
 
         <a class="project-card" href="https://lagora.tn" target="_blank">
@@ -40,7 +41,7 @@
           </div>
           <span class="project-tag">WordPress</span>
           <h3>lagora.tn</h3>
-          <p>Web platform and marketplace.</p>
+          <p data-i18n="p-lagora">Web platform and marketplace.</p>
         </a>
 
         <a class="project-card" href="https://thelandlord.tn" target="_blank">
@@ -50,7 +51,7 @@
           </div>
           <span class="project-tag">Flutter &middot; Node.js</span>
           <h3>thelandlord.tn</h3>
-          <p>Mobile app &mdash; full stack Flutter &amp; Node.js.</p>
+          <p data-i18n="p-tll">Mobile app &mdash; full stack Flutter &amp; Node.js.</p>
         </a>
 
         <a class="project-card" href="https://manager.thelandlord.tn" target="_blank">
@@ -60,7 +61,7 @@
           </div>
           <span class="project-tag">Laravel</span>
           <h3>manager.thelandlord.tn</h3>
-          <p>Property Management System.</p>
+          <p data-i18n="p-manager">Property Management System.</p>
         </a>
 
         <a class="project-card" href="https://secadenorddigitale.tn/ScadaSidiElBarrak/login" target="_blank">
@@ -70,7 +71,7 @@
           </div>
           <span class="project-tag">Laravel</span>
           <h3>Secadenordigital SCADA</h3>
-          <p>Industrial ERP/SCADA system.</p>
+          <p data-i18n="p-scada">Industrial ERP/SCADA system.</p>
         </a>
 
         <a class="project-card" href="https://envirofest.tn" target="_blank">
@@ -80,7 +81,7 @@
           </div>
           <span class="project-tag">WordPress</span>
           <h3>envirofest.tn</h3>
-          <p>Environmental festival platform.</p>
+          <p data-i18n="p-enviro">Environmental festival platform.</p>
         </a>
 
         <a class="project-card" href="https://conciergetunisie.thelandlord.tn" target="_blank">
@@ -90,15 +91,15 @@
           </div>
           <span class="project-tag">WordPress</span>
           <h3>conciergetunisie</h3>
-          <p>Concierge service platform.</p>
+          <p data-i18n="p-concierge">Concierge service platform.</p>
         </a>
 
       </div>
     </section>
 
     <section id="skills" class="reveal-section">
-      <div class="section-label">[FILE_03 &mdash; CAPABILITIES]</div>
-      <h2>Skills</h2>
+      <div class="section-label" data-i18n="file03">[FILE_03 &mdash; CAPABILITIES]</div>
+      <h2 data-i18n="skills">Skills</h2>
       <div class="skills-list">
         <span><i class="devicon-laravel-plain"></i> Laravel</span>
         <span><i class="devicon-flutter-plain"></i> Flutter</span>
@@ -115,9 +116,9 @@
     </section>
 
     <section id="contact" class="reveal-section">
-      <div class="section-label">[FILE_04 &mdash; ESTABLISH CONTACT]</div>
-      <h2>Contact</h2>
-      <p>Available for freelance, collaborations, and interesting problems.</p>
+      <div class="section-label" data-i18n="file04">[FILE_04 &mdash; ESTABLISH CONTACT]</div>
+      <h2 data-i18n="contact">Contact</h2>
+      <p data-i18n="contact-text">Available for freelance, collaborations, and interesting problems.</p>
       <div class="contact-links">
         <a href="mailto:gbhy1919@gmail.com" class="contact-link">
           <i class="devicon-google-plain"></i> gbhy1919@gmail.com
