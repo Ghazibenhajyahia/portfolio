@@ -515,3 +515,26 @@ p {
   0%, 100% { box-shadow: 0 0 0 #00ff8800; }
   50% { box-shadow: 0 0 12px #00ff8830; }
 }
+
+/* ── Language toggle button ── */
+#lang-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 4.5rem;
+  z-index: 50;
+  background: rgba(0, 3, 8, 0.7);
+  border: 1px solid var(--border-green);
+  color: var(--green);
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(4px);
+}
+#lang-btn:hover {
+  background: var(--dim-green);
+  box-shadow: 0 0 12px #00ff8830;
+}
