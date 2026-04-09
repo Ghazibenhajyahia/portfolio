@@ -216,33 +216,58 @@ const labels = PLANETS.map(pd => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function getHitPlanet(e) {
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+// Normalize any screen coordinate to NDC for raycasting
+function screenToNDC(clientX, clientY) {
+  return {
+    x: (clientX / window.innerWidth) * 2 - 1,
+    y: -(clientY / window.innerHeight) * 2 + 1
+  };
+}
+
+function hitTest(clientX, clientY) {
+  const ndc = screenToNDC(clientX, clientY);
+  mouse.x = ndc.x;
+  mouse.y = ndc.y;
   raycaster.setFromCamera(mouse, camera);
-  // Only test planet meshes directly (not children)
+
+  // Check black hole first
+  if (raycaster.intersectObject(bhCore, false).length > 0) return 'bh';
+
+  // Check planets — expand hit area on mobile for easier tapping
+  const mobile = isMobile();
+  raycaster.params.Points.threshold = mobile ? 1.5 : 0.5;
+  // Temporarily widen sphere hit detection on mobile
+  if (mobile) {
+    const hits = raycaster.intersectObjects(planetMeshes, false);
+    if (hits.length > 0) return planetData.get(hits[0].object.id);
+    // Fallback: check distance to projected planet positions
+    let closest = null, minDist = mobile ? 40 : 20; // px threshold
+    planetMeshes.forEach(mesh => {
+      const projected = mesh.position.clone().project(camera);
+      const sx = (projected.x * 0.5 + 0.5) * window.innerWidth;
+      const sy = (-projected.y * 0.5 + 0.5) * window.innerHeight;
+      const dist = Math.hypot(clientX - sx, clientY - sy);
+      if (dist < minDist && projected.z < 1) { minDist = dist; closest = planetData.get(mesh.id); }
+    });
+    return closest;
+  }
   const hits = raycaster.intersectObjects(planetMeshes, false);
   return hits.length > 0 ? planetData.get(hits[0].object.id) : null;
 }
 
 window.addEventListener('mousemove', e => {
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  const ndc = screenToNDC(e.clientX, e.clientY);
+  mouse.x = ndc.x; mouse.y = ndc.y;
   raycaster.setFromCamera(mouse, camera);
-  const onBH = raycaster.intersectObject(bhCore).length > 0;
-  document.body.style.cursor = (onBH || getHitPlanet(e)) ? 'pointer' : '';
+  const onBH = raycaster.intersectObject(bhCore, false).length > 0;
+  const onPlanet = raycaster.intersectObjects(planetMeshes, false).length > 0;
+  document.body.style.cursor = (onBH || onPlanet) ? 'pointer' : '';
 });
 
 function handleTap(clientX, clientY) {
-  const fakeE = { clientX, clientY };
-  mouse.x = (clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  if (raycaster.intersectObject(bhCore).length > 0) {
-    enterBlackHole(); return;
-  }
-  const pd = getHitPlanet(fakeE);
-  if (pd) showPlanetModal(pd);
+  const hit = hitTest(clientX, clientY);
+  if (hit === 'bh') { enterBlackHole(); return; }
+  if (hit) showPlanetModal(hit);
 }
 
 window.addEventListener('click', e => {
@@ -250,22 +275,27 @@ window.addEventListener('click', e => {
   handleTap(e.clientX, e.clientY);
 });
 
-// Touch support for mobile
-let touchStartX = 0, touchStartY = 0;
+// Touch — robust tap detection
+let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
 window.addEventListener('touchstart', e => {
+  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
+  touchStartTime = Date.now();
 }, { passive: true });
 
 window.addEventListener('touchend', e => {
   if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const dy = e.changedTouches[0].clientY - touchStartY;
-  // Only treat as tap if finger didn't move much
-  if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-    handleTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  const dt = Date.now() - touchStartTime;
+  // Tap = small movement + short duration
+  if (Math.abs(dx) < 15 && Math.abs(dy) < 15 && dt < 400) {
+    e.preventDefault();
+    handleTap(t.clientX, t.clientY);
   }
-}, { passive: true });
+}, { passive: false });
 
 function enterBlackHole() {
   const flash = document.createElement('div');
