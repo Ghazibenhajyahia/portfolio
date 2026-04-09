@@ -285,7 +285,8 @@ window.addEventListener('touchstart', e => {
 }, { passive: true });
 
 window.addEventListener('touchend', e => {
-  if (e.target.closest('.planet-card') || e.target.id === 'planet-modal') return;
+  // Never intercept taps on links, buttons, or modal elements
+  if (e.target.closest('a, button, .planet-card') || e.target.id === 'planet-modal') return;
   const t = e.changedTouches[0];
   const dx = t.clientX - touchStartX;
   const dy = t.clientY - touchStartY;
